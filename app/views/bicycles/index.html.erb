@@ -1,0 +1,119 @@
+<% provide(:title, '| Search') %>
+
+<% if @bicycles %>
+  <h3 class="highlight center"><%= pluralize(@bicycles.count, "search result") %>.</h3>
+  <% if @bicycles.present? %>
+    <div class="center">
+      <%= will_paginate @bicycles, renderer: BootstrapPagination::Rails %>
+    </div>
+    <div class="table-responsive">
+      <table class='table table-hover'>
+        <tr>
+          <td>Photo</td>
+          <td>Stolen</td>
+          <td>Year</td>
+          <td>Color</td>
+          <td>Brand</td>
+          <td>Model</td>
+          <td>City</td>
+          <td>Region</td>
+          <td>Country</td>
+          <td>Serial</td>
+        </tr>
+        <% @bicycles.each do |bicycle| %>
+          <tr>
+            <td><a href=<%= bicycle_path(bicycle) %> >
+              <%= image_tag bicycle.photo.url :thumb %>
+            </a></td>
+            <td><%= bicycle.date %></td>
+            <td><%= bicycle.year %></td>
+            <td><%= bicycle.color %></td>
+            <td><%= bicycle.brand %></td>
+            <td><%= bicycle.model %></td>
+            <td><%= bicycle.city %></td>
+            <td><%= bicycle.region %></td>
+            <td><%= bicycle.country %></td>
+            <td><%= bicycle.serial %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div class="center">
+      <%= will_paginate @bicycles, renderer: BootstrapPagination::Rails %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="well">
+  <%= form_tag search_path, :method => 'get', :class => "form-horizontal" do %>
+    <div class="form-group">
+      <h1 class='lead center'>Bicycle Search</h1>
+      <div class="col-md-4 col-md-offset-2">
+        <div class="input-group">
+          <span class="input-group-addon label-info">Serial #</span>
+          <%= text_field :query, :serial, placeholder: 'Serial #', class: "form-control" %>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon label-info">Year</span>
+          <%= number_field :query, :year, placeholder: 'Year', class: "form-control" %>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon label-info">Brand</span>
+          <%= text_field :query, :brand, placeholder: 'Make', class: "form-control", autocomplete: "off",
+                         'data-provide'=>'typeahead', 'data-source' => AutoComplete::BRANDS %>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon label-info">Model</span>
+          <%= text_field :query, :model, placeholder: 'Model', class: "form-control" %>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon label-info">Color</span>
+          <%= text_field :query, :color, placeholder: 'Color', class: "form-control", autocomplete: "off",
+                         'data-provide'=>'typeahead', 'data-source' => AutoComplete::COLORS %>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-addon label-info">Postal Code</span>
+          <%= text_field :query, :postal_code, placeholder: 'Postal Code', class: "form-control" %>
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon label-info">City</span>
+          <%= text_field :query, :city, value: user_signed_in? ? current_user.city : '',
+                         placeholder: 'City', class: "form-control", autocomplete: "off", 'data-provide'=>'typeahead',
+                        'data-source' => AutoComplete::CITIES %>
+        </div>
+
+        <div>
+          <% if user_signed_in? && current_user.country == 'Canada' %>
+            <%= select :query, :region, Geography::PROVINCES, :include_blank => 'Select Province',
+                       selected: current_user.region %>
+          <% elsif user_signed_in? && current_user.country == 'United States' %>
+            <%= select :query, :region, Geography::STATES, :include_blank => 'Select Province',
+                       selected: current_user.region %>
+          <% else %>
+            <%= select :query, :region, Geography::STATES + ['-Canada-'] + Geography::PROVINCES,
+                       :include_blank => 'Select Province', :include_blank => 'Select Region' %>
+          <% end %>
+        </div>
+
+        <div>
+          <%= select :query, :country, ['United States', 'Canada'], :include_blank => 'Select Country', 
+          selected: user_signed_in? ? current_user.country : 'Select Country' %>
+        </div>
+
+        <div="list-group">
+          <span class="list-group-item">
+          <%= check_box('query', 'recovered') %>
+          <%= label(:recovered, "Include recovered bicycles") %>
+          </span>
+        </div>
+      </div>
+    <div class="center">
+      <%= submit_tag 'Search', class: 'btn btn-small btn-success', id: 'advanced-search' %>
+    </div>
+    </div>
+  <% end %>
+</div>
