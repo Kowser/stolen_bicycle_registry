@@ -2,7 +2,7 @@
 
 Stolen Bicycle Registry is an online database that tracks stolen bicycles. This is an overhaul on the original. As a capstone project for the Epicodus program, we worked as a team of 6 students __directly with the client__ to bring this project to life. Our team had regular check-ins to make sure everyone was on the same page, we worked in pairs and rotated daily to make sure everyone worked together and was well versed in the entire code base. Our client was __very happy__ with the site design and ease of use, but ultimately chose a different route by merging his site with another existing site and combining their databases.
 
-![alt text](https://github.com/Kowser/Ruby_on_Rails_Portfolio/blob/master/stolen_bicycle_registry/screenshots.png "Stolen Bicycle Registry screenshots")
+![alt text](https://github.com/Kowser/Ruby_on_Rails_Portfolio/blob/master/stolen_bicycle_registry/screenshots-sbr.png "Stolen Bicycle Registry screenshots")
 
 Read below for the dependencies.
 
